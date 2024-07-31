@@ -7,6 +7,7 @@ namespace App\Http\Resources\Users;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Override;
 
 /**
  * @property string $accessToken
@@ -19,7 +20,7 @@ class AuthenticateResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    #[\Override]
+    #[Override]
     public function toArray(Request $request): array
     {
         return [
