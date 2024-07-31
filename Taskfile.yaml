@@ -1,0 +1,38 @@
+version: '3'
+
+env:
+  ENV_FILE: .env
+  CONTAINER_NAME: guide-to-vitebsk-server-php
+
+tasks:
+  build:
+    desc: "Builds docker images"
+    cmd: docker compose --env-file $ENV_FILE build {{.CLI_ARGS}}
+  up:
+    desc: "Launches the application"
+    cmd: docker compose --env-file $ENV_FILE up {{.CLI_ARGS}}
+  stop:
+    desc: "Stops the application"
+    cmd: docker compose --env-file $ENV_FILE stop {{.CLI_ARGS}}
+  down:
+    desc: "Stops the application and removes containers"
+    cmd: docker compose --env-file $ENV_FILE down {{.CLI_ARGS}}
+  artisan:
+    desc: "Launches Artisan"
+    cmd: docker exec -it $CONTAINER_NAME php artisan {{.CLI_ARGS}}
+  composer:
+    desc: "Launches Composer"
+    cmd: docker exec -it $CONTAINER_NAME composer {{.CLI_ARGS}}
+  format:
+    desc: "Formats files using Rector and Pint"
+    cmds:
+      - docker exec -it $CONTAINER_NAME ./vendor/bin/pint
+      - docker exec -it $CONTAINER_NAME ./vendor/bin/rector
+  chown:
+    desc: "Sets the necessary rights to some directories for the correct development and operation of the application"
+    cmds:
+      - sudo chown $USER -R app bootstrap config database public routes tests
+      - sudo chmod 777 -R storage bootstrap/cache vendor
+  test:
+    desc: "Runs tests"
+    cmd: docker exec -it $CONTAINER_NAME php artisan test {{.CLI_ARGS}}
